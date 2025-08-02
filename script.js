@@ -37,11 +37,22 @@ let state = {
     complete: false,
     inventory: {},
     emotions: {},
+    codePrefix: "4299", // will be set randomly
 };
 
 let interval;
 
+function randomPrefix() {
+    return (
+        Math.floor(Math.random() * 10).toString() +
+        Math.floor(Math.random() * 10).toString() +
+        Math.floor(Math.random() * 10).toString() +
+        Math.floor(Math.random() * 10).toString()
+    );
+}
+
 function initGame() {
+    state.codePrefix = randomPrefix();
     document.getElementById("timer").innerText = `Time: ${state.time}`;
     interval = setInterval(() => {
         state.time--;
@@ -69,7 +80,7 @@ function loadPassage(passage) {
 
     }
     if (passage === "opt1") {
-        if (!state.inventory.readPapers) {
+        if (!state.inventory.ouroborosPapers) {
             game.innerHTML = `
         <p>As you enter the bay, you see a lot of papers scattered around the place. You pick one up and it reveals to be a paper on how to wipe a portion of one's memory. Glancing around, there appears to be pieces of helmets that look exactly like yours on the floor as well as an electronic safe.</p>
         <span class="choice" onclick="loadPassage('search_papers')">Continue searching through papers</span>
@@ -80,7 +91,7 @@ function loadPassage(passage) {
         } else {
             game.innerHTML = `
         <p>As you enter the bay, you see a lot of papers scattered around the place which you ignore. Glancing around, there appears to be pieces of helmets that look exactly like yours on the floor as well as an electronic safe.</p>
-       
+        <span class="choice" onclick="loadPassage('search_papers')">Continue searching through papers</span>    
         <span class="choice" onclick="loadPassage('investigate_helmets')">Investigate the helmets</span>
         <span class="choice" onclick="loadPassage('check_safe')">Check the safe</span>
         <span class="choice" onclick="loadPassage('start')">Go back</span>
@@ -98,7 +109,7 @@ function loadPassage(passage) {
             <span class="choice" onclick="loadPassage('start')">Go back</span>
         `;
         } else {
-            state.inventory.readPapers = true;
+            state.inventory.ouroborosPapers = true;
             game.innerHTML = `
             <p>Curiosity killed the cat huh. The project file is called <h1>Ouroboros</h1> which details an experimental neural loop—a system designed to erase traumatic memory by cycling it through recursive false states. Some diagrams imply test subjects were unaware they were part of the program. Near the bottom, your name is listed as a participant. You take a step back in shock. Just what exactly is going on. You rip this page from the report and stuffed it in your pocket.</p>
             <span class="choice" onclick="loadPassage('investigate_helmets')">Investigate the helmets</span>
@@ -112,7 +123,7 @@ function loadPassage(passage) {
         <p>You see a row of helmets resting on foam supports, each one wired into a set of humming, heat-emitting servers. The visors glow faintly. Each helmet is tagged with a crew member’s name—faded, scratched, but legible. Your own name is etched into the fourth. It looks recently used. The inside is still warm.</p>
         <span class="choice" onclick="loadPassage('wear_helmet')">Wear your helmet</span>
         <span class="choice" onclick="loadPassage('check_safe')">Check the safe</span>
-        ${!state.inventory.readPapers ? `<span class="choice" onclick="loadPassage('search_papers')">Go through papers</span>` : ""}
+        ${!state.inventory.ouroborosPapers ? `<span class="choice" onclick="loadPassage('search_papers')">Go through papers</span>` : ""}
         <span class="choice" onclick="loadPassage('start')">Go back</span>
     `;
     }
@@ -120,30 +131,30 @@ function loadPassage(passage) {
         clearInterval(interval);
         game.innerHTML = `
         <p>You lower the helmet over your head. A brief static flickers across your vision, then darkness. You reach to lift it off, but it doesn't budge. Locks hiss shut around your neck.</p>
-        <p>“Cleansing memory,” a voice says calmly into your ears. You freeze. “What?!” you shout, panic rising.</p>
+        <p>“Cleansing memory” a voice says calmly into your ears. You freeze. “What?!” you shout, panic rising.</p>
         <p>Your hands scratch at the sides as a cold numbness creeps in. The servers whine louder and your vision begins to blur.</p>
     `;
         setTimeout(() => {
             game.innerHTML = `
-            <p style="color: red; font-size: 3em; text-align: center;">YOU DIED</p>
+            <p class="death-message">YOU DIED</p>
             <button onclick="restart()">Try Again</button>
         `;
         }, 10000);
     }
     if (passage === "check_safe") {
-        if (!state.inventory.safe) {
+        if (!state.inventory.codeA) {
             game.innerHTML = `
         <p>The safe is electronic and secured with a question-based lockout. Instead of a typical password, it presents a prompt: <em>"In what year did human space travel begin?"</em></p>
-        <input id="safe-answer" type="text" maxlength="4" style="width: 80px; text-align: center;" />
+        <input id="safe-answer" type="text" maxlength="4" />
         <br><br>
         <button onclick="submitSafeAnswer()">Submit</button>
        
     `;
         } else {
             game.innerHTML = `
-        <p>You come back to find that one of the digits is 4</p>
+        <p>You come back to find that one of the digits is ${state.codePrefix[0]}</p>
         <span class="choice" onclick="loadPassage('investigate_helmets')">Investigate the helmets</span>
-            ${!state.inventory.readPapers ? `<span class="choice" onclick="loadPassage('search_papers')">Go through papers</span>` : ""}
+            ${!state.inventory.ouroborosPapers ? `<span class="choice" onclick="loadPassage('search_papers')">Go through papers</span>` : ""}
             <span class="choice" onclick="loadPassage('start')">Go back</span>
        
     `;
@@ -185,11 +196,13 @@ function loadPassage(passage) {
             state.inventory.screwdriver = true;
             game.innerHTML = `
         <p>You have found a screwdriver. You take it in case you need it later.</p>
+        <span class="choice" onclick="loadPassage('take_painkiller')">Take painkiller</span>
         <span class="choice" onclick="loadPassage('stop_searching')">Close cabinet</span>
       `;
         } else {
             game.innerHTML = `
         <p>The cabinet is empty. There's nothing else to be found.</p>
+        <span class="choice" onclick="loadPassage('take_painkiller')">Take painkiller</span>
         <span class="choice" onclick="loadPassage('stop_searching')">Close cabinet</span>
       `;
         }
@@ -212,7 +225,7 @@ function loadPassage(passage) {
   `;
         setTimeout(() => {
             game.innerHTML = `
-      <p style="color: red; font-size: 3em; text-align: center;">YOU DIED</p>
+      <p class="death-message">YOU DIED</p>
       <button onclick="restart()">Try Again</button>
     `;
         }, 10000);
@@ -222,7 +235,8 @@ function loadPassage(passage) {
         if (!state.inventory.usb) {
             state.inventory.usb = true;
             game.innerHTML = `
-            <p>You flip your pillow and feel a cool spot. A USB pops falls onto your face. You decide to take it.</p>
+            <p>You flip your pillow and feel a cool spot. A USB pops falls out. You decide to take it.</p>
+            <span class="choice" onclick="loadPassage('stay_in_bed')">Continue to stay in the bed</span>
             <span class="choice" onclick="loadPassage('opt2')">Get out of bed</span>
         `;
         } else {
@@ -245,7 +259,7 @@ function loadPassage(passage) {
 
         setTimeout(() => {
             game.innerHTML = `
-        <p style="color: red; font-size: 3em; text-align: center;">YOU DIED</p>
+        <p class="death-message">YOU DIED</p>
         <button onclick="restart()">Try Again</button>
       `;
         }, 10000);
@@ -266,7 +280,7 @@ function loadPassage(passage) {
     }
 
     if (passage === "medical_history") {
-        if (!state.inventory.readPapers) {
+        if (!state.inventory.ouroborosPapers) {
             if (!state.emotions.medshock) {
                 state.emotions.medshock = true
                 game.innerHTML = `
@@ -315,11 +329,12 @@ function loadPassage(passage) {
         <span class="choice" onclick="loadPassage('access_computer')">Close application</span>
     `;
     }
+
     if (passage === "play_snake") {
 
         game.innerHTML = `
     <p>Use W/A/S/D or Arrow Keys to move the snake. Eat 6 red dots to win.</p>
-    <div id="snake-grid" style="display: grid; grid-template-columns: repeat(4, 40px); grid-template-rows: repeat(4, 40px); gap: 2px; margin-top: 10px; border: 4px solid limegreen; width: fit-content;"></div>
+    <div id="snake-grid" ></div>
   `;
 
         const grid = document.getElementById("snake-grid");
@@ -398,9 +413,9 @@ function loadPassage(passage) {
             document.removeEventListener("keydown", handleKey);
 
             if (result === "win") {
-                state.node2 = true;
+                state.inventory.codeB = true;
                 game.innerHTML = `
-        <p>As you won the game, the screen went pitch black. Suddenly the word "Two" flashed on the screen and as quickly as it came, it disappeared. You note that 2 is one of the digits of the code.</p>
+        <p>As you won the game, the screen went pitch black. Suddenly the number ${state.codePrefix[1]} flashed on the screen and as quickly as it came, it disappeared. You note that ${state.codePrefix[1]} is the second digit.</p>
         <span class="choice" onclick="loadPassage('opt2')">Leave computer and take USB</span>
       `;
             } else {
@@ -468,7 +483,7 @@ function loadPassage(passage) {
 
         setTimeout(() => {
             game.innerHTML = `
-            <p style="color: red; font-size: 3em; text-align: center;">YOU DIED</p>
+            <p class="death-message">YOU DIED</p>
             <button onclick="restart()">Try Again</button>
         `;
         }, 10000);
@@ -482,7 +497,7 @@ function loadPassage(passage) {
 
             if (state.inventory.screwdriver) {
                 game.innerHTML += `
-                <p>You pry the panel open with the screwdriver. Etched faintly into the inner metal is a string of digits: <strong>4256</strong>.  You now face a decision: escape with your life, or risk everything to take the data.</p>
+                <p>Etched faintly into the metal is a string of digits: <strong>${state.codePrefix[0]}${state.codePrefix[1]}56</strong>.  You now face a decision: escape with your life, or risk everything to take the data.</p>
                 <span class="choice" onclick="loadPassage('viewing_deck')">Go to viewing deck</span>
                 <span class="choice" onclick="loadPassage('open_panel')">Open panel</span>
                 <span class="choice" onclick="loadPassage('start')">Go back</span>
@@ -506,7 +521,7 @@ function loadPassage(passage) {
         game.innerHTML = `
         <p>You insert the USB into the exposed port. Lines of encrypted data begin flooding into the drive at near-instant speed.</p>
         <p>Just before completion—at 99%—a prompt appears on screen: <em>"Enter Project Name for Final Confirmation"</em>.</p>
-        <input id="project-name" type="text" style="width: 150px; text-align: center;" />
+        <input id="project-name" type="text" />
         <br><br>
         <button onclick="submitProjectName()">Submit</button>
         <span class="choice" onclick="loadPassage('viewing_deck')">Go to viewing deck</span>
@@ -516,11 +531,10 @@ function loadPassage(passage) {
 
 
 
-
     if (passage === "opt4") {
         game.innerHTML = `
     <p>You're ready to escape. Enter the 4-digit code or go back.</p>
-    <input id="escape-code" type="text" maxlength="4" style="width: 60px; text-align: center;" />
+    <input id="escape-code" type="text" maxlength="4" />
     <br><br>
     <button onclick="checkEscapeCode()">Enter Code</button>
     <span class="choice" onclick="loadPassage('start')">Go Back</span>
@@ -528,7 +542,7 @@ function loadPassage(passage) {
     }
     if (passage === "timeout") {
         game.innerHTML = `
-      <p style="color: red; font-size: 3em; text-align: center;">YOU DIED</p>
+      <p class="death-message">YOU DIED</p>
         <button onclick="restart()">Try Again</button>
     `;
     }
@@ -542,10 +556,10 @@ function submitProjectName() {
     const game = document.getElementById("game");
 
     if (input === "ouroboros") {
-        state.node3 = true;
+        state.inventory.codeC = true;
         game.innerHTML = `
             <p>Project name accepted. Transfer complete.</p>
-            <p>You yank the USB out. As you turn to leave, your fingers brush the back of the device—etched into the casing is the phrase: <strong>__99</strong>.</p>
+            <p>You yank the USB out. As you turn to leave, your fingers brush the back of the device—etched into the casing is the phrase: <strong>__${state.codePrefix[2]}${state.codePrefix[3]}</strong>.</p>
             <span class="choice" onclick="loadPassage('viewing_deck')">Go to viewing deck</span>
             <span class="choice" onclick="loadPassage('start')">Go back</span>
         `;
@@ -563,13 +577,24 @@ function checkEscapeCode() {
     const code = document.getElementById("escape-code").value;
     const game = document.getElementById("game");
 
-    if (code === "4299") {
+    if (code === state.codePrefix) {
         clearInterval(interval);
         game.innerHTML = `
-      <p style="font-size: 2em;">You entered the correct code. The hatch opens, and you launch the escape pod just in time.</p>
-      <p style="color: limegreen; font-size: 3em; text-align: center;">YOU ESCAPED</p>
-      <span class="choice" onclick="restart()">Play Again</span>
+      <p >You entered the correct code. The hatch opens, and you launch the escape pod just in time.</p>
+      <h1>YOU SURVIVED</h1>
+      <span class="choice" id="play-again-btn">Play Again</span>
     `;
+        setTimeout(() => {
+            const playAgainBtn = document.getElementById("play-again-btn");
+            if (playAgainBtn) {
+                playAgainBtn.onclick = () => {
+                    restart(); // <-- Reset inventory and state
+                    gameScreen.classList.add("hidden");
+                    instructionsScreen.classList.remove("hidden");
+                    setTimeout(() => instructionsScreen.classList.add("visible"), 50);
+                };
+            }
+        }, 500);
     } else {
         clearInterval(interval);
         game.innerHTML = `
@@ -581,7 +606,7 @@ function checkEscapeCode() {
 
         setTimeout(() => {
             game.innerHTML = `
-            <p style="color: red; font-size: 3em; text-align: center;">YOU DIED</p>
+            <p class="death-message">YOU DIED</p>
             <button onclick="restart()">Try Again</button>
         `;
         }, 10000);
@@ -594,20 +619,20 @@ function submitSafeAnswer() {
 
 
     if (input === "1957") {
-        state.node1 = true;
+
         game.innerHTML = `
-            <p>The safe beeps twice and unlocks. Inside, you find a post-it note with a single number written on it: <strong>4</strong>. This must be part of the escape code.</p>
+            <p>The safe beeps twice and unlocks. Inside, you find a post-it note with a single number written on it: <strong>${state.codePrefix[0]}</strong>. This is the first digit.</p>
             <span class="choice" onclick="loadPassage('investigate_helmets')">Investigate the helmets</span>
-            ${!state.inventory.readPapers ? `<span class="choice" onclick="loadPassage('search_papers')">Go through papers</span>` : ""}
+            ${!state.inventory.ouroborosPapers ? `<span class="choice" onclick="loadPassage('search_papers')">Go through papers</span>` : ""}
             <span class="choice" onclick="loadPassage('start')">Go back</span>
         `;
-        state.inventory.safe = true;
+        state.inventory.codeA = true;
     } else {
         game.innerHTML = `
             <p>The safe remains locked. Incorrect answer.</p>
             <span class="choice" onclick="loadPassage('check_safe')">Try Again</span>
             <span class="choice" onclick="loadPassage('investigate_helmets')">Investigate the helmets</span>
-            ${!state.inventory.readPapers ? `<span class="choice" onclick="loadPassage('search_papers')">Go through papers</span>` : ""}
+            ${!state.inventory.ouroborosPapers ? `<span class="choice" onclick="loadPassage('search_papers')">Go through papers</span>` : ""}
             <span class="choice" onclick="loadPassage('start')">Go back</span>
         `;
     }
@@ -617,12 +642,10 @@ function submitSafeAnswer() {
 function restart() {
     state = {
         time: 180,
-        node1: false,
-        node2: false,
-        node3: false,
         complete: false,
         inventory: {},
         emotions: {},
+        codePrefix: randomPrefix(),
     };
     document.getElementById("timer").innerText = `Time: ${state.time}`;
     clearInterval(interval);
@@ -635,4 +658,29 @@ function restart() {
         }
     }, 1000);
     loadPassage("start");
+}
+document.addEventListener("keydown", e => {
+    if (e.key.toLowerCase() === "i") {
+        showInventory();
+    }
+});
+
+document.addEventListener("keyup", e => {
+    if (e.key.toLowerCase() === "i") {
+        hideInventory();
+    }
+});
+
+function showInventory() {
+    const panel = document.getElementById("inventory-panel");
+    panel.style.display = "block";
+    panel.innerHTML = "<strong>Inventory</strong><br>" + Object.entries(state.inventory)
+        .filter(([_, v]) => v)
+        .map(([k]) => `- ${k}`)
+        .join("<br>");
+}
+
+function hideInventory() {
+    const panel = document.getElementById("inventory-panel");
+    panel.style.display = "none";
 }
