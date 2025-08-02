@@ -86,7 +86,7 @@ function loadPassage(passage) {
         <span class="choice" onclick="loadPassage('search_papers')">Continue searching through papers</span>
         <span class="choice" onclick="loadPassage('investigate_helmets')">Investigate the helmets</span>
         <span class="choice" onclick="loadPassage('check_safe')">Check the safe</span>
-        <span class="choice" onclick="loadPassage('start')">Go back</span>
+        <span class="choice" onclick="loadPassage('start')">Leave the room</span>
         `;
         } else {
             game.innerHTML = `
@@ -94,7 +94,7 @@ function loadPassage(passage) {
         <span class="choice" onclick="loadPassage('search_papers')">Continue searching through papers</span>    
         <span class="choice" onclick="loadPassage('investigate_helmets')">Investigate the helmets</span>
         <span class="choice" onclick="loadPassage('check_safe')">Check the safe</span>
-        <span class="choice" onclick="loadPassage('start')">Go back</span>
+        <span class="choice" onclick="loadPassage('start')">Leave the room</span>
         `;
         }
     }
@@ -106,15 +106,15 @@ function loadPassage(passage) {
             <span class="choice" onclick="loadPassage('search_papers')">Continue searching through papers</span>
             <span class="choice" onclick="loadPassage('investigate_helmets')">Investigate the helmets</span>
             <span class="choice" onclick="loadPassage('check_safe')">Check the safe</span>
-            <span class="choice" onclick="loadPassage('start')">Go back</span>
+            <span class="choice" onclick="loadPassage('start')">Leave the room</span>
         `;
         } else {
             state.inventory.ouroborosPapers = true;
             game.innerHTML = `
-            <p>Curiosity killed the cat huh. The project file is called <h1>Ouroboros</h1> which details an experimental neural loop—a system designed to erase traumatic memory by cycling it through recursive false states. Some diagrams imply test subjects were unaware they were part of the program. Near the bottom, your name is listed as a participant. You take a step back in shock. Just what exactly is going on. You rip this page from the report and stuffed it in your pocket.</p>
+            <p>Curiosity killed the cat huh. The project file is called <h1>Ouroboros</h1> which details an experimental neural loop—a system designed to erase one's memory. Some diagrams and annotations imply test subjects were unaware they were part of the program. Near the bottom, your name is listed as a participant. You take a step back in shock. Just what exactly is going on. You roll up this report and stuff it into your pockets.</p>
             <span class="choice" onclick="loadPassage('investigate_helmets')">Investigate the helmets</span>
             <span class="choice" onclick="loadPassage('check_safe')">Check the safe</span>
-            <span class="choice" onclick="loadPassage('start')">Go back</span>
+            <span class="choice" onclick="loadPassage('start')">Leave the room</span>
         `;
         }
     }
@@ -124,7 +124,7 @@ function loadPassage(passage) {
         <span class="choice" onclick="loadPassage('wear_helmet')">Wear your helmet</span>
         <span class="choice" onclick="loadPassage('check_safe')">Check the safe</span>
         ${!state.inventory.ouroborosPapers ? `<span class="choice" onclick="loadPassage('search_papers')">Go through papers</span>` : ""}
-        <span class="choice" onclick="loadPassage('start')">Go back</span>
+        <span class="choice" onclick="loadPassage('start')">Leave the room</span>
     `;
     }
     if (passage === "wear_helmet") {
@@ -155,7 +155,7 @@ function loadPassage(passage) {
         <p>You come back to find that one of the digits is ${state.codePrefix[0]}</p>
         <span class="choice" onclick="loadPassage('investigate_helmets')">Investigate the helmets</span>
             ${!state.inventory.ouroborosPapers ? `<span class="choice" onclick="loadPassage('search_papers')">Go through papers</span>` : ""}
-            <span class="choice" onclick="loadPassage('start')">Go back</span>
+            <span class="choice" onclick="loadPassage('start')">Leave the room</span>
        
     `;
         }
@@ -168,7 +168,7 @@ function loadPassage(passage) {
         if (!state.inventory.medicalCard) {
             game.innerHTML = `
             <p>As you approach the cockpit door, it remains firmly sealed. Unlike the others, this one appears to require authorisation. A scanner next to the frame flashes red. You spot a slot labeled: <em>Medical Chief’s Access Card Required</em>.</p>
-            <span class="choice" onclick="loadPassage('start')">Go back</span>
+            <span class="choice" onclick="loadPassage('start')">Leave the room</span>
         `;
         } else {
             game.innerHTML = `
@@ -177,7 +177,7 @@ function loadPassage(passage) {
       <span class="choice" onclick="loadPassage('access_computer')">Access computer</span>
       <span class="choice" onclick="loadPassage('look_medicine')">Look for medicine</span>
       <span class="choice" onclick="loadPassage('sleep_bed')">Sleep in the bed</span>
-      <span class="choice" onclick="loadPassage('start')">Go back</span>
+      <span class="choice" onclick="loadPassage('start')">Leave the room</span>
     `;
         }
     }
@@ -461,14 +461,14 @@ function loadPassage(passage) {
         if (!state.inventory.accessCard) {
             game.innerHTML = `
             <p>As you approach the cockpit door, it remains firmly sealed. Unlike the others, this one appears to require authorisation. A scanner next to the frame flashes red. You spot a slot labeled: <em>Captain’s Access Card Required</em>.</p>
-            <span class="choice" onclick="loadPassage('start')">Go back</span>
+            <span class="choice" onclick="loadPassage('start')">Leave the room</span>
         `;
         } else {
             game.innerHTML = `
             <p>You swipe the access card. The door opens with a soft hiss. Inside the cockpit, a panoramic view of deep space spreads before you. On one side, a PC terminal glows faintly. Opposite it, the viewing deck is cluttered with loose pages, tablets, and broken equipment.</p>
             <span class="choice" onclick="loadPassage('cockpit_pc')">Go to PC</span>
             <span class="choice" onclick="loadPassage('viewing_deck')">Go to viewing deck</span>
-            <span class="choice" onclick="loadPassage('start')">Go back</span>
+            <span class="choice" onclick="loadPassage('start')">Leave the room</span>
         `;
         }
     }
@@ -500,20 +500,20 @@ function loadPassage(passage) {
                 <p>Etched faintly into the metal is a string of digits: <strong>${state.codePrefix[0]}${state.codePrefix[1]}56</strong>.  You now face a decision: escape with your life, or risk everything to take the data.</p>
                 <span class="choice" onclick="loadPassage('viewing_deck')">Go to viewing deck</span>
                 <span class="choice" onclick="loadPassage('open_panel')">Open panel</span>
-                <span class="choice" onclick="loadPassage('start')">Go back</span>
+                <span class="choice" onclick="loadPassage('start')">Leave the room</span>
             `;
             } else {
                 game.innerHTML += `
                 <p>You tug at the panel, but it’s fixed tight. You wish you had a screwdriver.</p>
                 <span class="choice" onclick="loadPassage('viewing_deck')">Go to viewing deck</span>
-                <span class="choice" onclick="loadPassage('start')">Go back</span>
+                <span class="choice" onclick="loadPassage('start')">Leave the room</span>
             `;
             }
         } else {
             game.innerHTML += `
             <p>You scan the terminal and feel the urgency—but without a USB, you can’t extract anything. You curse under your breath.</p>
             <span class="choice" onclick="loadPassage('viewing_deck')">Go to viewing deck</span>
-            <span class="choice" onclick="loadPassage('start')">Go back</span>
+            <span class="choice" onclick="loadPassage('start')">Leave the room</span>
         `;
         }
     }
@@ -525,7 +525,7 @@ function loadPassage(passage) {
         <br><br>
         <button onclick="submitProjectName()">Submit</button>
         <span class="choice" onclick="loadPassage('viewing_deck')">Go to viewing deck</span>
-        <span class="choice" onclick="loadPassage('start')">Go back</span>
+        <span class="choice" onclick="loadPassage('start')">Leave the room</span>
     `;
     }
 
@@ -533,11 +533,11 @@ function loadPassage(passage) {
 
     if (passage === "opt4") {
         game.innerHTML = `
-    <p>You're ready to escape. Enter the 4-digit code or go back.</p>
+    <p>You're ready to escape. Enter the 4-digit code or Leave the room.</p>
     <input id="escape-code" type="text" maxlength="4" />
     <br><br>
     <button onclick="checkEscapeCode()">Enter Code</button>
-    <span class="choice" onclick="loadPassage('start')">Go Back</span>
+    <span class="choice" onclick="loadPassage('start')">Leave the room</span>
   `;
     }
     if (passage === "timeout") {
@@ -561,14 +561,14 @@ function submitProjectName() {
             <p>Project name accepted. Transfer complete.</p>
             <p>You yank the USB out. As you turn to leave, your fingers brush the back of the device—etched into the casing is the phrase: <strong>__${state.codePrefix[2]}${state.codePrefix[3]}</strong>.</p>
             <span class="choice" onclick="loadPassage('viewing_deck')">Go to viewing deck</span>
-            <span class="choice" onclick="loadPassage('start')">Go back</span>
+            <span class="choice" onclick="loadPassage('start')">Leave the room</span>
         `;
     } else {
         game.innerHTML = `
             <p>Incorrect project name. Transfer halted.</p>
             <span class="choice" onclick="loadPassage('open_panel')">Try Again</span>
             <span class="choice" onclick="loadPassage('viewing_deck')">Go to viewing deck</span>
-            <span class="choice" onclick="loadPassage('start')">Go back</span>
+            <span class="choice" onclick="loadPassage('start')">Leave the room</span>
         `;
     }
 }
@@ -601,7 +601,7 @@ function checkEscapeCode() {
         <p>You enter the code: ${code}. The keypad beeps—then flashes red. The hatch stays shut.</p>
         <p>An automated voice echoes through the corridor: <em>"Incorrect override. Self-destruct protocol activated."</em></p>
         <p>You back away in disbelief. Lights dim. Sirens rise. You close your eyes and lean against the wall, thinking about every mistake that led you here.</p>
-        <p>There’s no countdown. Just fire.</p>
+        
     `;
 
         setTimeout(() => {
@@ -624,7 +624,7 @@ function submitSafeAnswer() {
             <p>The safe beeps twice and unlocks. Inside, you find a post-it note with a single number written on it: <strong>${state.codePrefix[0]}</strong>. This is the first digit.</p>
             <span class="choice" onclick="loadPassage('investigate_helmets')">Investigate the helmets</span>
             ${!state.inventory.ouroborosPapers ? `<span class="choice" onclick="loadPassage('search_papers')">Go through papers</span>` : ""}
-            <span class="choice" onclick="loadPassage('start')">Go back</span>
+            <span class="choice" onclick="loadPassage('start')">Leave the room</span>
         `;
         state.inventory.codeA = true;
     } else {
@@ -633,7 +633,7 @@ function submitSafeAnswer() {
             <span class="choice" onclick="loadPassage('check_safe')">Try Again</span>
             <span class="choice" onclick="loadPassage('investigate_helmets')">Investigate the helmets</span>
             ${!state.inventory.ouroborosPapers ? `<span class="choice" onclick="loadPassage('search_papers')">Go through papers</span>` : ""}
-            <span class="choice" onclick="loadPassage('start')">Go back</span>
+            <span class="choice" onclick="loadPassage('start')">Leave the room</span>
         `;
     }
 }
