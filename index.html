@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Echoes in Orbit</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="title-screen" class="screen hidden">
+  <h1 id="game-title">Echoes in Orbit</h1>
+  <button id="play-button">Play</button>
+</div>
+
+<div id="instructions-screen" class="screen hidden">
+  <h2>Mission Briefing</h2>
+  <p>You awaken to flickering lights, a shrill alarm, and blood in your helmet. Your ship has collided with an asteroid. Hull integrity is compromised. Oxygen is dropping fast.</p>
+  <p>You have <strong>180 seconds</strong> before life support fails.</p>
+  <p>The escape hatch is locked behind a 4-digit code — one that is set for emergencies. But the impact scrambled your memory. The only thing you remember was that this ship was going on a journey to find life on another planet.</p>
+  <p>Fortunately, you left clues hidden across key systems of the ship but you cannot remember why. Three fragments of the code.</p>
+  <p>Recover them. Escape. Or be forever lost in the void.</p>
+  <button id="begin-button">Start The Escape</button>
+</div>
+
+
+<div id="game-screen" class="hidden">
+  <div id="timer">Time: 180</div>
+  <div id="game"></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
